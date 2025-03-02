@@ -1,26 +1,47 @@
 import { useEffect, useState } from "react"
-import fibTripples from "../utils/fib"
+import { fibExponential, fibLinear, fibLogarithmic } from "../utils/fibFunctions"
+
+const functionNameMap = {
+    'Logarithmic': fibLogarithmic,
+    'Linear': fibLinear,
+    'Exponential': fibExponential
+}
 
 function Home() {
 
-    const [input, setInput] = useState(0)
-    const [output, setOutput] = useState(0)
+    const [input, setInput] = useState(1)
+    const [output, setOutput] = useState(1)
+    const [activeFunction, setActiveFunction] = useState('Logarithmic')
 
     useEffect(() => {
-        setOutput(fibTripples(input))
+        setOutput(String(functionNameMap[activeFunction](Number(input))))
     }, [input])
 
     return (
         <>
             <div>Home</div>
+            <select
+                onChange={e => {
+                    setInput(1)
+                    setActiveFunction(e.target.value)
+                }}
+            >
+                {Object.keys(functionNameMap).map(functionName => (
+                    <option key={functionName} value={functionName}>{functionName}</option>
+                ))}
+            </select>
+            <hr />
             <input
                 value={input}
                 type="number"
                 min="0"
-                onChange={event => setInput(event.target.value)}
+                onChange={e => {
+                    if (e.target.value < 0) e.target.value = 0
+                    setInput(e.target.value)
+                }}
             />
             <p>digits: {output.length}</p>
-            <p>f(x) = {output}</p>
+            <p>f({input}) = {output}</p>
         </>
     )
 }

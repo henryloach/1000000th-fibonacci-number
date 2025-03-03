@@ -11,10 +11,10 @@ function Home() {
 
     const [input, setInput] = useState(1)
     const [output, setOutput] = useState(1)
-    const [activeFunction, setActiveFunction] = useState('Logarithmic')
+    const [activeFunction, setActiveFunction] = useState(() => fibLogarithmic)
 
     useEffect(() => {
-        setOutput(String(functionNameMap[activeFunction](Number(input))))
+        setOutput(String(activeFunction(Number(input))))
     }, [input])
 
     return (
@@ -23,7 +23,7 @@ function Home() {
             <select
                 onChange={e => {
                     setInput(1)
-                    setActiveFunction(e.target.value)
+                    setActiveFunction(() => functionNameMap[e.target.value])
                 }}
             >
                 {Object.keys(functionNameMap).map(functionName => (
